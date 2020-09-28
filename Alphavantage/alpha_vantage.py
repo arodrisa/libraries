@@ -13,10 +13,14 @@ class ALPHA:
         retrieved_data = pd.read_csv(self.url)
         return retrieved_data
 
-    def retrieve_json_to_dict(self):
+    def retrieve_json_to_pandas(self, frequency):
         req = requests.get(self.url).content
         retrieved_data = json.loads(req)
-        return retrieved_data
+        if frequency == 'annual':
+            return_data = pd.DataFrame(retrieved_data['annualReports'])
+        else:
+            return_data = pd.DataFrame(retrieved_data['quarterlyReports'])
+        return return_data
 
     def get_intraday(self, symbol, interval='5min',
                      adjusted='true', outputsize='compact', datatype='csv'):
@@ -62,34 +66,35 @@ class ALPHA:
             'apikey=' + self.apikey + '&' + 'datatype=' + self.datatype
         self.retrieve_data_from_csv_to_pandas()
 
-    def get_company_overview(self, symbol):
+    def get_company_overview(self, symbol, frequency='quarterly'):
         self.function = 'OVERVIEW'
         self.symbol = symbol
 
         self.url = self.url_base+'function=' + self.function + '&' + \
             'symbol=' + self.symbol + '&' + 'apikey=' + self.apikey
-        return self.retrieve_json_to_dict()
 
-    def get_company_income_statement(self, symbol):
+        return self.retrieve_json_to_pandas(frequency)
+
+    def get_company_income_statement(self, symbol, frequency='quarterly'):
         self.function = 'INCOME_STATEMENT'
         self.symbol = symbol
 
         self.url = self.url_base+'function=' + self.function + '&' + \
             'symbol=' + self.symbol + '&' + 'apikey=' + self.apikey
-        return self.retrieve_json_to_dict()
+        return self.retrieve_json_to_pandas(frequency)
 
-    def get_company_balance_sheet(self, symbol):
+    def get_company_balance_sheet(self, symbol, frequency='quarterly'):
         self.function = 'BALANCE_SHEET'
         self.symbol = symbol
 
         self.url = self.url_base+'function=' + self.function + '&' + \
             'symbol=' + self.symbol + '&' + 'apikey=' + self.apikey
-        return self.retrieve_json_to_dict()
+        return self.retrieve_json_to_pandas(frequency)
 
-    def get_company_cash_flow(self, symbol):
+    def get_company_cash_flow(self, symbol, frequency='quarterly'):
         self.function = 'CASH_FLOW'
         self.symbol = symbol
 
         self.url = self.url_base+'function=' + self.function + '&' + \
             'symbol=' + self.symbol + '&' + 'apikey=' + self.apikey
-        return self.retrieve_json_to_dict()
+        return self.retrieve_json_to_pandas(frequency)
