@@ -22,6 +22,13 @@ class ALPHA:
             return_data = pd.DataFrame(retrieved_data['quarterlyReports'])
         return return_data
 
+    def retrieve_json_to_dict(self):
+        return_data = requests.get(self.url).json()
+        return return_data
+
+    def get_current_url(self):
+        return self.url
+
     def get_intraday(self, symbol, interval='5min',
                      adjusted='true', outputsize='compact', datatype='csv'):
         self.function = 'TIME_SERIES_INTRADAY'
@@ -34,7 +41,7 @@ class ALPHA:
         self.url = self.url_base + 'function=' + self.function + '&' + 'symbol=' + self.symbol + '&' + 'interval=' + self.interval + '&' + \
             'apikey=' + self.apikey + '&' + 'adjusted=' + self.adjusted + '&' + \
             'outputsize=' + self.outputsize + '&' + 'datatype=' + self.datatype
-        print(self.url)
+        # print(self.url)
         return self.retrieve_data_from_csv_to_pandas()
 
     def get_intraday_extended(self, symbol, interval='5min', slice='year1month1', adjusted='true'):
@@ -46,7 +53,7 @@ class ALPHA:
         self.url = self.url_base + 'function=' + self.function + '&' + 'symbol=' + self.symbol + '&' + 'interval=' + self.interval + '&' + \
             'apikey=' + self.apikey + '&' + 'adjusted=' + self.adjusted + '&' + \
             'slice=' + self.slice
-        self.retrieve_data_from_csv_to_pandas()
+        return self.retrieve_data_from_csv_to_pandas()
 
     def get_ohlcv(self, symbol, outputsize='compact', datatype='csv'):
         self.function = 'TIME_SERIES_DAILY'
@@ -55,7 +62,7 @@ class ALPHA:
         self.datatype = datatype
         self.url = self.url_base + 'function=' + self.function + '&' + 'symbol=' + self.symbol + '&' + 'outputsize=' + self.outputsize + '&' + \
             'apikey=' + self.apikey + '&' + 'datatype=' + self.datatype
-        self.retrieve_data_from_csv_to_pandas()
+        return self.retrieve_data_from_csv_to_pandas()
 
     def get_ohlcv_adjusted(self, symbol, outputsize='compact', datatype='csv'):
         self.function = 'TIME_SERIES_DAILY'
@@ -64,16 +71,16 @@ class ALPHA:
         self.datatype = datatype
         self.url = self.url_base + 'function=' + self.function + '&' + 'symbol=' + self.symbol + '&' + 'outputsize=' + self.outputsize + '&' + \
             'apikey=' + self.apikey + '&' + 'datatype=' + self.datatype
-        self.retrieve_data_from_csv_to_pandas()
+        return self.retrieve_data_from_csv_to_pandas()
 
-    def get_company_overview(self, symbol, frequency='quarterly'):
+    def get_company_overview(self, symbol):
         self.function = 'OVERVIEW'
         self.symbol = symbol
 
         self.url = self.url_base+'function=' + self.function + '&' + \
             'symbol=' + self.symbol + '&' + 'apikey=' + self.apikey
-
-        return self.retrieve_json_to_pandas(frequency)
+        print(self.url)
+        return self.retrieve_json_to_dict()
 
     def get_company_income_statement(self, symbol, frequency='quarterly'):
         self.function = 'INCOME_STATEMENT'
